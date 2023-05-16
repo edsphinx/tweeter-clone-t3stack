@@ -3,11 +3,11 @@ import Image from "next/image";
 import Head from "next/head";
 
 import { SignInButton, useUser } from "@clerk/nextjs";
-import { RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/utils/api";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { LoadingPage, LoadingSpinner } from "~/components/loading";
+import { LoadingPage } from "~/components/loading";
 dayjs.extend(relativeTime);
 
 const CreatePostWizard = () => {
@@ -15,7 +15,7 @@ const CreatePostWizard = () => {
 
   console.log(user);
 
-  if (!user) return <></>;
+  if (!user) return <div />;
 
   return (
     <div className="flex w-full gap-3">
@@ -38,6 +38,9 @@ type PostWithUser = RouterOutputs["posts"]["getAll"][number];
 
 const PostView = (props: PostWithUser) => {
   const { post, author } = props;
+
+  if (!author.username) return <div />;
+
   return (
     <div key={post.id} className="flex gap-3 border-b border-slate-400 p-4">
       <Image
@@ -54,7 +57,7 @@ const PostView = (props: PostWithUser) => {
             post.createdAt
           ).fromNow()}`}</span>
         </div>
-        <span>{post.content}</span>
+        <span className="text-xl">{post.content}</span>
       </div>
     </div>
   );
